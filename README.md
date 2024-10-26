@@ -1,1 +1,1 @@
-# penslate-journal
+# PenSlate-Journal
