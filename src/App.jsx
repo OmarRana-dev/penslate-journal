@@ -1,25 +1,49 @@
-import { useState } from "react";
-import "./App.css";
+import { useState, useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { login, logout } from "./store/authSlice";
+import authService from "./appwrite/authService";
+import { useDispatch } from "react-redux";
 
-function App() {
-  const [count, setCount] = useState(0);
+import {
+  Header,
+  Container,
+  Blogfeed,
+  Blog,
+  Login,
+} from "./components";
 
-  return (
+const App = () => {
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is already logged in by calling getCurrentUser
+    authService
+      .getCurrentUser()
+      .then((data) => {
+        if (data) {
+          console.log("User logged in:", data);
+          dispatch(login(data)); // If user is logged in, dispatch login action
+        } else {
+          console.log("No session found, please log in.");
+          dispatch(logout()); // If no session, user needs to log in
+          navigate("/login");
+        }
+      })
+      .finally(() => setLoading(false)); // Set loading state after checking session
+  }, []);
+
+  return !loading ? (
     <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Container>
+        <Header />
+        <main>
+          <Outlet />
+        </main>
+      </Container>
     </>
-  );
-}
+  ) : null;
+};
 
 export default App;
