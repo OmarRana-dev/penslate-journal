@@ -1,18 +1,21 @@
 import appwriteConfig from "../utils/appwriteConfig";
-import { Client, Account, ID } from "appwrite";
+import { Client, Account, ID, Databases } from "appwrite";
+import appwriteService from "./appwriteConfigService";
 
 export class AuthService {
   client = new Client();
   account;
+  databases;
 
   constructor() {
     this.client
       .setEndpoint(appwriteConfig.appwrite_URL)
       .setProject(appwriteConfig.appwritePROJECT_ID);
     this.account = new Account(this.client);
+    this.databases = new Databases(this.client);
   }
 
-  async createAccount({ email, password, name }) {
+  async createAccount({ email, password, name, image }) {
     try {
       const response = await this.account.create(
         ID.unique(), // Generate a unique ID for the user
@@ -20,6 +23,14 @@ export class AuthService {
         password,
         name
       );
+      if (response) {
+        appwriteService.createUser({
+          username: name,
+          userId: response.$id,
+          userEmail: email,
+          userImage: image,
+        });
+      }
       console.log("User registered successfully:", response);
       return response;
     } catch (error) {

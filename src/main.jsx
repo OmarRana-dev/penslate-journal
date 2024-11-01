@@ -11,11 +11,17 @@ import store from "./store/store.js";
 
 import "./index.css";
 import App from "./App.jsx";
-import { Blog, Blogfeed, Login, Signup } from "./components/index.js";
+import {
+  Blog,
+  Blogfeed,
+  Login,
+  Signup,
+  ErrorPage,
+} from "./components/index.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
+    <Route path="/" element={<App />} errorElement={<ErrorPage />}>
       <Route path="/" element={<Blogfeed />} />,
       <Route path="/blog/:slug" element={<Blog />} />,
       <Route path="/login" element={<Login />} />,

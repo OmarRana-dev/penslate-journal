@@ -12,32 +12,31 @@ function Header() {
   const isEditer = location.pathname.includes("/editer");
 
   return (
-    <div className="navbar  bg-orange-400 ">
+    <header className="navbar">
       <div className="flex-1">
         <Link to="/">
           <Logo />
         </Link>
       </div>
-      <div className="flex-none gap-2">
+      <div className="flex-none gap-4">
         {/* if user is already login */}
         {console.log(authStatus)}
         {authStatus && (
           <>
             {!isEditer && (
               <>
-                <div className="form-control">
+                {/* <div className="form-control">
                   <input
                     type="text"
                     placeholder="Search"
                     className="input input-bordered w-24 md:w-auto"
                   />
-                </div>
+                </div> */}
                 <div
                   onClick={() => navigate("/editer")}
-                  className="btn "
+                  className="cursor-pointer text-slate-600 hover:text-slate-950 rounded-lg py-2 px-4"
                 >
-                  <FontAwesomeIcon icon={faEdit} />
-                  <span>Write</span>
+                  <FontAwesomeIcon icon={faEdit} /> <span>Write</span>
                 </div>
               </>
             )}
@@ -94,7 +93,7 @@ function Header() {
           </>
         )}
       </div>
-    </div>
+    </header>
   );
 }
 

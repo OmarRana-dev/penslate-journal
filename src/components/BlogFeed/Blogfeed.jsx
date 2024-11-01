@@ -1,52 +1,50 @@
-import React from "react";
-import { BlogCard } from "../";
+import React, { useEffect, useState } from "react";
+import { BlogCart } from "../";
+import appwriteService from "../../appwrite/appwriteConfigService";
 
 function Blogfeed() {
-  const headline = "10 Advanced JavaScript Tricks You Don’t Know";
-  const description =
-    "Enhance your coding skills with these lesser-known JavaScript techniques.";
-  const username = "bhavik prajapati";
+  const [blogs, setBlogs] = useState([]);
+  const [authors, setAuthors] = useState({});
+
+  useEffect(() => {
+    appwriteService
+      .getBlogs([])
+      .then((blogs) => {
+        if (blogs) {
+          setBlogs(blogs.documents);
+          console.log(blogs.documents);
+        }
+      })
+      .then(() => {
+        appwriteService.getAuthors().then((authorDocs) => {
+          // Convert authors array to a lookup object by userId for easy access
+          const authorsLookup = authorDocs.reduce((acc, author) => {
+            acc[author.userId] = author;
+            return acc;
+          }, {});
+          setAuthors(authorsLookup);
+          console.log(authorsLookup);
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   return (
-    <>
-      <div className="flex flex-col gap-4 pt-8">
-        <BlogCard
-          headline={headline}
-          description={description}
-          username={username}
-          likesCount={5}
-          commentsCount={1}
-        />
-        <BlogCard
-          headline={headline}
-          description={description}
-          username={username}
-          likesCount={0}
-          commentsCount={0}
-        />
-        <BlogCard
-          headline={headline}
-          description={description}
-          username={username}
-          likesCount={15}
-          commentsCount={0}
-        />
-        <BlogCard
-          headline={headline}
-          description={description}
-          username={username}
-          likesCount={55}
-          commentsCount={21}
-        />
-        <BlogCard
-          headline={headline}
-          description={description}
-          username={username}
-          likesCount={71}
-          commentsCount={0}
-        />
-      </div>
-    </>
+    <div className="flex flex-col gap-4 pt-8 ">
+      {blogs.map((blog) => {
+        const author = authors[blog.userId];
+        if (author) {
+          return (
+            <div key={blog.$id}>
+              <BlogCart {...blog} {...author} />
+            </div>
+          );
+        }
+        return null; // Skip rendering if no author is found
+      })}
+    </div>
   );
 }
 

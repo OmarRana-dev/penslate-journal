@@ -4,13 +4,7 @@ import { login, logout } from "./store/authSlice";
 import authService from "./appwrite/authService";
 import { useDispatch } from "react-redux";
 
-import {
-  Header,
-  Container,
-  Blogfeed,
-  Blog,
-  Login,
-} from "./components";
+import { Header, Container } from "./components";
 
 const App = () => {
   const [loading, setLoading] = useState(true);

@@ -14,7 +14,7 @@ export class Service {
     this.storage = new Storage(this.client);
   }
 
-  async createPost({
+  async createBlog({
     title,
     content,
     featuredImage,
@@ -29,7 +29,7 @@ export class Service {
     try {
       const response = await this.databases.createDocument(
         appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwriteCOLLECTION_ID,
+        appwriteConfig.appwrite_BLOG_COLLECTION_ID,
         ID.unique(),
         {
           title,
@@ -45,14 +45,43 @@ export class Service {
     }
   }
 
-  async updatePost(
+  async createUser({ username, userId, userEmail, userImage }) {
+    try {
+      const response = await this.databases.createDocument(
+        appwriteConfig.appwriteDATABASE_ID,
+        appwriteConfig.appwrite_USER_INFO_COLLECTION_ID,
+        ID.unique(),
+        { username, userId, userEmail, userImage }
+      );
+      return response;
+    } catch (error) {
+      console.error("Error registering user:", error.message);
+      throw new Error(error.message);
+    }
+  }
+
+  async getAuthors() {
+    try {
+      const result = await this.databases.listDocuments(
+        appwriteConfig.appwriteDATABASE_ID,
+        appwriteConfig.appwrite_USER_INFO_COLLECTION_ID
+      );
+
+      return result.documents;
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      throw error;
+    }
+  }
+
+  async updateBlog(
     DocumentID,
     { title, content, featuredImage, status }
   ) {
     try {
       const response = await this.databases.updateDocument(
         appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwriteCOLLECTION_ID,
+        appwriteConfig.appwrite_BLOG_COLLECTION_ID,
         DocumentID,
         {
           title,
@@ -67,11 +96,11 @@ export class Service {
     }
   }
 
-  async deletePost(DocumentID) {
+  async deleteBlog(DocumentID) {
     try {
       const response = await this.databases.deleteDocument(
         appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwriteCOLLECTION_ID,
+        appwriteConfig.appwrite_BLOG_COLLECTION_ID,
         DocumentID
       );
       return response;
@@ -80,11 +109,11 @@ export class Service {
     }
   }
 
-  async getPost(DocumentID) {
+  async getBlog(DocumentID) {
     try {
       const response = await this.databases.getDocument(
         appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwriteCOLLECTION_ID,
+        appwriteConfig.appwrite_BLOG_COLLECTION_ID,
         DocumentID
       );
       return response;
@@ -93,11 +122,11 @@ export class Service {
     }
   }
 
-  async getPosts(queries = [Query.equal("status", "active")]) {
+  async getBlogs(queries = [Query.equal("status", "active")]) {
     try {
       const response = await this.databases.listDocuments(
         appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwriteCOLLECTION_ID,
+        appwriteConfig.appwrite_BLOG_COLLECTION_ID,
         queries
       );
       return response;
