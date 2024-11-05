@@ -32,8 +32,8 @@ function Login() {
 
   return (
     <>
-      <div className="flex items-center justify-center w-full min-h-[calc(100vh-4rem)] bg-green-100">
-        <div className="mx-auto w-full max-w-sm  rounded-xl p-10">
+      <div className="flex items-center justify-center w-full">
+        <div className="mx-auto w-full max-w-sm  p-10">
           <p className="mt-2 text-center text-base text-black/60">
             Don&apos;t have any account?{" "}
             <Link

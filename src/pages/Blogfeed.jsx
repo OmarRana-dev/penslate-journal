@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { BlogCart } from "../";
-import appwriteService from "../../appwrite/appwriteConfigService";
+import { BlogCart } from "../components";
+import appwriteService from "../appwrite/appwriteConfigService";
 
 function Blogfeed() {
   const [blogs, setBlogs] = useState([]);
@@ -12,7 +12,6 @@ function Blogfeed() {
       .then((blogs) => {
         if (blogs) {
           setBlogs(blogs.documents);
-          console.log(blogs.documents);
         }
       })
       .then(() => {
@@ -23,7 +22,6 @@ function Blogfeed() {
             return acc;
           }, {});
           setAuthors(authorsLookup);
-          console.log(authorsLookup);
         });
       })
       .catch((error) => {
@@ -34,11 +32,11 @@ function Blogfeed() {
   return (
     <div className="flex flex-col gap-4 pt-8 ">
       {blogs.map((blog) => {
-        const author = authors[blog.userId];
+        const author = authors[blog.authorId];
         if (author) {
           return (
             <div key={blog.$id}>
-              <BlogCart {...blog} {...author} />
+              <BlogCart author={author} blog={blog} />
             </div>
           );
         }

@@ -1,4 +1,4 @@
-import appwriteConfig from "../utils/appwriteConfig";
+import Config from "../utils/Config";
 import { Client, ID, Databases, Storage, Query } from "appwrite";
 
 export class Service {
@@ -8,31 +8,33 @@ export class Service {
 
   constructor() {
     this.client
-      .setEndpoint(appwriteConfig.appwrite_URL)
-      .setProject(appwriteConfig.appwritePROJECT_ID);
+      .setEndpoint(Config.appwrite_URL)
+      .setProject(Config.appwritePROJECT_ID);
     this.databases = new Databases(this.client);
     this.storage = new Storage(this.client);
   }
 
   async createBlog({
     title,
+    subtitle,
     content,
     featuredImage,
     status,
     userId,
   }) {
-    console.log(title);
-    console.log(content);
-    console.log(featuredImage);
-    console.log(status);
-    console.log(userId);
+    // console.log(title);
+    // console.log(content);
+    // console.log(featuredImage);
+    // console.log(status);
+    // console.log(userId);
     try {
       const response = await this.databases.createDocument(
-        appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwrite_BLOG_COLLECTION_ID,
+        Config.appwriteDATABASE_ID,
+        Config.appwrite_BLOG_COLLECTION_ID,
         ID.unique(),
         {
           title,
+          subtitle,
           content,
           featuredImage,
           status,
@@ -48,8 +50,8 @@ export class Service {
   async createUser({ username, userId, userEmail, userImage }) {
     try {
       const response = await this.databases.createDocument(
-        appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwrite_USER_INFO_COLLECTION_ID,
+        Config.appwriteDATABASE_ID,
+        Config.appwrite_USER_INFO_COLLECTION_ID,
         ID.unique(),
         { username, userId, userEmail, userImage }
       );
@@ -63,8 +65,8 @@ export class Service {
   async getAuthors() {
     try {
       const result = await this.databases.listDocuments(
-        appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwrite_USER_INFO_COLLECTION_ID
+        Config.appwriteDATABASE_ID,
+        Config.appwrite_USER_INFO_COLLECTION_ID
       );
 
       return result.documents;
@@ -74,17 +76,32 @@ export class Service {
     }
   }
 
+  async getAuthor(DocumentID) {
+    try {
+      const response = await this.databases.listDocuments(
+        Config.appwriteDATABASE_ID,
+        Config.appwrite_USER_INFO_COLLECTION_ID,
+        [Query.equal("userId", DocumentID)]
+      );
+      return response;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
   async updateBlog(
     DocumentID,
-    { title, content, featuredImage, status }
+    { title, subtitle, content, featuredImage, status }
   ) {
+    console.log(featuredImage);
     try {
       const response = await this.databases.updateDocument(
-        appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwrite_BLOG_COLLECTION_ID,
+        Config.appwriteDATABASE_ID,
+        Config.appwrite_BLOG_COLLECTION_ID,
         DocumentID,
         {
           title,
+          subtitle,
           content,
           featuredImage,
           status,
@@ -99,8 +116,8 @@ export class Service {
   async deleteBlog(DocumentID) {
     try {
       const response = await this.databases.deleteDocument(
-        appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwrite_BLOG_COLLECTION_ID,
+        Config.appwriteDATABASE_ID,
+        Config.appwrite_BLOG_COLLECTION_ID,
         DocumentID
       );
       return response;
@@ -112,8 +129,8 @@ export class Service {
   async getBlog(DocumentID) {
     try {
       const response = await this.databases.getDocument(
-        appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwrite_BLOG_COLLECTION_ID,
+        Config.appwriteDATABASE_ID,
+        Config.appwrite_BLOG_COLLECTION_ID,
         DocumentID
       );
       return response;
@@ -125,8 +142,8 @@ export class Service {
   async getBlogs(queries = [Query.equal("status", "active")]) {
     try {
       const response = await this.databases.listDocuments(
-        appwriteConfig.appwriteDATABASE_ID,
-        appwriteConfig.appwrite_BLOG_COLLECTION_ID,
+        Config.appwriteDATABASE_ID,
+        Config.appwrite_BLOG_COLLECTION_ID,
         queries
       );
       return response;
@@ -136,9 +153,10 @@ export class Service {
   }
 
   async uploadFile(file) {
+    console.log(file);
     try {
       const response = await this.storage.createFile(
-        appwriteConfig.appwriteBUCKET_ID,
+        Config.appwriteBUCKET_ID,
         ID.unique(),
         file
       );
@@ -151,7 +169,7 @@ export class Service {
   async deleteFile(fileId) {
     try {
       const response = await this.storage.deleteFile(
-        appwriteConfig.appwriteBUCKET_ID,
+        Config.appwriteBUCKET_ID,
         fileId
       );
       return response;
@@ -162,7 +180,7 @@ export class Service {
 
   async getFilePreview(fileId) {
     const response = this.storage.getFilePreview(
-      appwriteConfig.appwriteBUCKET_ID,
+      Config.appwriteBUCKET_ID,
       fileId
     );
     return response;

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function ErrorPage() {
+function Error404() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="text-center">
@@ -22,4 +22,4 @@ function ErrorPage() {
   );
 }
 
-export default ErrorPage;
+export default Error404;

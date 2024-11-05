@@ -1,4 +1,4 @@
-import appwriteConfig from "../utils/appwriteConfig";
+import Config from "../utils/Config";
 import { Client, Account, ID, Databases } from "appwrite";
 import appwriteService from "./appwriteConfigService";
 
@@ -9,8 +9,8 @@ export class AuthService {
 
   constructor() {
     this.client
-      .setEndpoint(appwriteConfig.appwrite_URL)
-      .setProject(appwriteConfig.appwritePROJECT_ID);
+      .setEndpoint(Config.appwrite_URL)
+      .setProject(Config.appwritePROJECT_ID);
     this.account = new Account(this.client);
     this.databases = new Databases(this.client);
   }

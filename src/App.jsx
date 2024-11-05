@@ -32,7 +32,7 @@ const App = () => {
     <>
       <Container>
         <Header />
-        <main>
+        <main className="min-h-[calc(100vh-4rem)]">
           <Outlet />
         </main>
       </Container>

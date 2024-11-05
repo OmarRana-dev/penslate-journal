@@ -12,20 +12,66 @@ import store from "./store/store.js";
 import "./index.css";
 import App from "./App.jsx";
 import {
-  Blog,
   Blogfeed,
+  Blog,
   Login,
   Signup,
   ErrorPage,
-} from "./components/index.js";
+  AddBlog,
+  EditBlog,
+} from "./pages";
+import AuthLayout from "./components/AuthLayout.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorPage />}>
-      <Route path="/" element={<Blogfeed />} />,
-      <Route path="/blog/:slug" element={<Blog />} />,
-      <Route path="/login" element={<Login />} />,
-      <Route path="/signup" element={<Signup />} />,
+      <Route path="" element={<Blogfeed />} />, ,
+      <Route
+        path="/login"
+        element={
+          <AuthLayout authentication={false}>
+            <Login />
+          </AuthLayout>
+        }
+      />
+      ,
+      <Route
+        path="/signup"
+        element={
+          <AuthLayout authentication={false}>
+            <Signup />
+          </AuthLayout>
+        }
+      />
+      ,
+      <Route
+        path="/editor/new-story"
+        element={
+          <AuthLayout authentication>
+            {" "}
+            <AddBlog />
+          </AuthLayout>
+        }
+      />
+      , ,
+      <Route
+        path="/editor/:blogId"
+        element={
+          <AuthLayout authentication>
+            {" "}
+            <EditBlog />
+          </AuthLayout>
+        }
+      />
+      ,
+      <Route
+        path="/blog/:slug"
+        element={
+          <AuthLayout authentication>
+            <Blog />
+          </AuthLayout>
+        }
+      />
     </Route>
   )
 );

@@ -1,33 +1,36 @@
 import React, { useEffect, useState } from "react";
 import appwriteService from "../appwrite/appwriteConfigService";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faHeart,
-  faCommentDots,
-  faShareFromSquare,
-  faBookmark,
-} from "@fortawesome/free-regular-svg-icons";
+  heartIcon,
+  messageIcon,
+  shareIcon,
+  saveIcon,
+} from "../assets";
 
-function BlogCart({
-  $id,
-  $createdAt,
-  $updatedAt,
-  username,
-  title,
-  subtitle,
-  featuredImage,
-  content,
-}) {
+function BlogCart(props) {
   const [imageUrl, setImageUrl] = useState(null);
   const [like, setLike] = useState(0);
   const [comment, setComment] = useState(0);
+
+  const {
+    $id,
+    $createdAt,
+    $updatedAt,
+    title,
+    subtitle,
+    content,
+    authorId,
+    featuredImage,
+  } = props.blog;
+  const { username } = props.author;
+
+  console.log(props);
 
   useEffect(() => {
     try {
       appwriteService.getFilePreview(featuredImage).then((url) => {
         setImageUrl(url);
-        console.log(url);
       });
     } catch (error) {
       throw new Error(error);
@@ -48,11 +51,13 @@ function BlogCart({
           $id,
           $createdAt,
           $updatedAt,
-          username,
           title,
           subtitle,
           content,
           imageUrl,
+          authorId,
+          featuredImage,
+          username,
         }}
         className="absolute inset-0 z-10"
       />
@@ -75,17 +80,17 @@ function BlogCart({
               className="cursor-pointer text-gray-500 font-mono"
               onClick={(e) => likeBlog(e)}
             >
-              <FontAwesomeIcon icon={faHeart} /> {like > 0 && like}
+              <img src={heartIcon} alt="" />
             </span>
             <div className="cursor-pointer text-gray-600 font-mono">
-              <FontAwesomeIcon icon={faCommentDots} />{" "}
+              <img src={messageIcon} alt="" />
               {comment > 0 && comment}
             </div>
             <div className="hover:text-green-500 cursor-pointer">
-              <FontAwesomeIcon icon={faShareFromSquare} />
+              <img src={shareIcon} alt="" />
             </div>
             <div className="hover:text-green-500 cursor-pointer">
-              <FontAwesomeIcon icon={faBookmark} />
+              <img src={saveIcon} alt="" />
             </div>
           </div>
         </div>

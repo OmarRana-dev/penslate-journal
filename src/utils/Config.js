@@ -1,4 +1,4 @@
-const appwriteConfig = {
+const Config = {
   appwrite_URL: String(import.meta.env.VITE_APPWRITE_URL),
   appwritePROJECT_ID: String(
     import.meta.env.VITE_APPWRITE_PROJECT_ID
@@ -13,6 +13,7 @@ const appwriteConfig = {
     import.meta.env.VITE_APPWRITE_USER_INFO_COLLECTION_ID
   ),
   appwriteBUCKET_ID: String(import.meta.env.VITE_APPWRITE_BUCKET_ID),
+  tinymce_APIKEY: String(import.meta.env.VITE_TINYMCE_API_KEY),
 };
 
-export default appwriteConfig;
+export default Config;

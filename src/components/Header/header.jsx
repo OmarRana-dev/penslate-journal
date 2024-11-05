@@ -9,7 +9,7 @@ function Header() {
   const authStatus = useSelector((state) => state.auth.status);
   const navigate = useNavigate();
   const location = useLocation();
-  const isEditer = location.pathname.includes("/editer");
+  const isEditer = location.pathname.includes("/editor");
 
   return (
     <header className="navbar">
@@ -20,7 +20,7 @@ function Header() {
       </div>
       <div className="flex-none gap-4">
         {/* if user is already login */}
-        {console.log(authStatus)}
+        {/* {console.log(authStatus)} */}
         {authStatus && (
           <>
             {!isEditer && (
@@ -33,17 +33,10 @@ function Header() {
                   />
                 </div> */}
                 <div
-                  onClick={() => navigate("/editer")}
+                  onClick={() => navigate("/editor/new-story")}
                   className="cursor-pointer text-slate-600 hover:text-slate-950 rounded-lg py-2 px-4"
                 >
                   <FontAwesomeIcon icon={faEdit} /> <span>Write</span>
-                </div>
-              </>
-            )}
-            {isEditer && (
-              <>
-                <div className="btn  btn-sm btn-outline btn-success">
-                  Publish
                 </div>
               </>
             )}
